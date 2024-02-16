@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Heading,
+  Image,
   Text,
   TextField,
   View,
