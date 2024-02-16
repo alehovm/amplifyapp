@@ -1,0 +1,14 @@
+{
+  "resourceName": "CV",
+  "policyUUID": "99d2f02e",
+  "bucketName": "cvqr",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
