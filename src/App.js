@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
+import { API, Storage } from '@aws-amplify';
 
 import {
   Button,
@@ -17,8 +18,10 @@ import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
-import { generateClient } from 'aws-amplify/api';
-const client = generateClient();
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports.js';
+
+Amplify.configure(config);
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
@@ -28,7 +31,7 @@ const App = ({ signOut }) => {
   }, []);
 
   async function fetchNotes() {
-    const apiData = await client.graphql({ query: listNotes });
+    const apiData = await API.graphql({ query: listNotes });
     const notesFromAPI = apiData.data.listNotes.items;
     await Promise.all(
       notesFromAPI.map(async (note) => {
@@ -52,7 +55,7 @@ const App = ({ signOut }) => {
       image: image.name,
     };
     if (!!data.image) await Storage.put(data.name, image);
-    await client.graphql({
+    await API.graphql({
       query: createNoteMutation,
       variables: { input: data },
     });
@@ -65,14 +68,13 @@ const App = ({ signOut }) => {
     const newNotes = notes.filter((note) => note.id !== id);
     setNotes(newNotes);
     await Storage.remove(name);
-    await client.graphql({
+    await API.graphql({
       query: deleteNoteMutation,
       variables: { input: { id } },
     });
   }
 
   return (
-    
     <View className="App">
       <View
   name="image"
@@ -132,7 +134,6 @@ const App = ({ signOut }) => {
       </View>
       <Button onClick={signOut}>Sign Out</Button>
     </View>
-    
   );
 };
 
